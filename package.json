@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/peterjacobson/push-waffle#readme",
   "dependencies": {
+    "bluebird": "^3.0.5",
+    "fs-promise": "^0.3.1",
     "github": "^0.2.4",
     "prompt": "^0.2.14"
   }
