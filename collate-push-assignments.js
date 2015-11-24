@@ -8,56 +8,38 @@ module.exports = function (sprintAssignmentFile, cohort, github) {
       user: 'dev-academy-phase0',
       repo: 'curriculum-private',
       path: sprintAssignmentFile
-    }).then(function(data) {
-      return convertToJSON(data.content)
-    }) // single
-      .then(collateAssignments)  // multiple, dependent
+    }).then(collateAssignments)  // multiple, dependent
       // .then(getStudents)  // single, parallel
       // .then(createAndPostIssues)
-      .catch(function() {
-        console.log('promisefail yo');
+      .catch(function(err) {
+        console.log(err);
       })
   }
 
-  var getSprintAssignmentData = function() {
-    console.log(sprintAssignmentFile);
-    return new Promise(function(resolve, reject) {
-      github.repos.getContent()
-    })
-
-    /*
-    return github.repos.getContent({})
-      .then(function (data) {
-        return convertToJSON(data.content)
-      })
-      .then
-    */
-  }
-
-  var collateAssignments = function(assignments) {
-    console.log('collating yo');
+  function collateAssignments(data) {
+    var assignments = convertToJSON(data.content)
     return Promise.all(
       Object.keys(assignments).map(function(key) {
-        return getAssignmentContent(assignments[key])
+        return github.getContentAsync({
+          user: 'dev-academy-phase0',
+          repo: 'curriculum-private',
+          path: 'Assignments/' + assignments[key]
+        })
       })
     )
   }
 
   // Needs github object
-  var getAssignmentContent = function(assignmentFilePath) {
-    console.log('getAssignmentContent', assignmentFilePath);
-    return new Promise(function(resolve, reject) {
-      github.repos.getContent({
-        user: 'dev-academy-phase0',
-        repo: 'curriculum-private',
-        path: 'assignments/' + assignmentFilePath
-      }, function(err, data) {
-        if (err) { reject(err) }
-        console.log(data);
-        resolve(convertToString(data.content))
-      })
-    })
-  }
+  // function getAssignmentContent(assignmentFilePath) {
+  //   console.log('getAssignmentContent', assignmentFilePath);
+  //   return new Promise(function(resolve, reject) {
+  //     , function(err, data) {
+  //       if (err) { reject(err) }
+  //       console.log(data);
+  //       resolve(convertToString(data.content))
+  //     })
+  //   })
+  // }
 
   function convertToJSON(data){
     var b = new Buffer(data, 'base64')
