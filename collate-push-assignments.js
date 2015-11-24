@@ -1,4 +1,36 @@
-module.exports = function() {
+var Promise = require("bluebird")
+// var fsp = Promise.promisifyAll(require("fs"))
+
+module.exports = function(sprintAssignmentFile, cohort, github) {
+  // var githubReposAsync = Promise.promisifyAll(github.repos)
+  // githubReposAsync.getContentAsync({
+  // })
+  //   .then(convertToJSON)
+  //   .then()
+  getSprintAssignmentData(sprintAssignmentFile, cohort, github)
+    .then(convertToJSON)
+}
+
+var getSprintAssignmentData = function(sprintAssignmentFile, cohort, github) {
+  return new Promise(function(resolve, reject) {
+    github.repos.getContent({
+      user: 'dev-academy-phase0',
+      repo: 'curriculum-private',
+      path: sprintAssignmentFile
+    }, function(err, data) {
+      if (err) { reject(err) }
+      resolve(data)
+    })
+  })
+}
+
+function convertToJSON(data){
+  var b = new Buffer(data.content, 'base64')
+  var assignments = JSON.parse(b.toString())
+  console.log(assignments);
+}
+
+// function getContent
 
       // read&parse #-assignments.json
         // read&parse assignment md files]
@@ -7,7 +39,7 @@ module.exports = function() {
               //  post issues to github
 
 
-  // fs.readFile(sprintAssignmentPath, function(err, data) {
+  // fs.readFileAsync(sprintAssignmentPath, function(err, data) {
   //   if (err) { throw err }
   //   assignmentPaths = JSON.parse(data)
   //   console.log(assignmentPaths);
@@ -17,9 +49,8 @@ module.exports = function() {
 
   var moaStudents = ['peterjacobson', 'pietgeursen', 'locksmithdon', 'jamanius', 'joshuavial']
   var githubUserOrOrg = 'dev-academy-phase0'
-  var cohortRepo = 'kakapo-2016-backlog'
 
-  var issues = compileIssuesObject(githubUserOrOrg, cohortRepo, assignments, moaStudents)
+  // var issues = compileIssuesObject(githubUserOrOrg, cohortRepo, assignments, moaStudents)
   // postSprintLabels(githubUserOrOrg, cohortRepo)
   // postIssues(issues)
 
@@ -35,27 +66,28 @@ module.exports = function() {
   //     description: '- [ ] complete [aliasing challenge](sdlk)\n- [ ] complete [github task sucker app](sdkl)'
   //   }
   // ]
-  function compileIssuesObject(githubUserOrOrg, destinationRepo, assignments, student_github_names){
-    var issues = []
-    for (var i = 0; i < student_github_names.length; i++) {
-      for (var k = 0; k < assignments.length; k++) {
-        issues.push({
-          user: githubUserOrOrg,
-          repo: destinationRepo,
-          title: assignments[k].title,
-          body: assignments[k].description,
-          assignee: student_github_names[i],
-          labels: ['sprint-1']
-        })
-      }  
-    }
-    return issues
-  }
 
-  function postIssues(issues) {
-    for (var i = 0; i < issues.length; i++) {
-      github.issues.create(issues[i], function(err, res) {
-      })
-    };
-  }
-}
+
+  // function compileIssuesObject(githubUserOrOrg, destinationRepo, assignments, student_github_names){
+  //   var issues = []
+  //   for (var i = 0; i < student_github_names.length; i++) {
+  //     for (var k = 0; k < assignments.length; k++) {
+  //       issues.push({
+  //         user: githubUserOrOrg,
+  //         repo: destinationRepo,
+  //         title: assignments[k].title,
+  //         body: assignments[k].description,
+  //         assignee: student_github_names[i],
+  //         labels: ['sprint-1']
+  //       })
+  //     }  
+  //   }
+  //   return issues
+  // }
+
+  // function postIssues(issues) {
+  //   for (var i = 0; i < issues.length; i++) {
+  //     github.issues.create(issues[i], function(err, res) {
+  //     })
+  //   };
+  // }
