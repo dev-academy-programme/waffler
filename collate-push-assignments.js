@@ -1,4 +1,5 @@
 var Promise = require("bluebird")
+var fsp = Promise.promisifyAll(require("fs"))
 
 module.exports = function (sprintAssignmentFile, cohort, github) {
   collateAndPushAssignments()
@@ -8,25 +9,29 @@ module.exports = function (sprintAssignmentFile, cohort, github) {
       user: 'dev-academy-phase0',
       repo: 'curriculum-private',
       path: sprintAssignmentFile
-    }).then(collateAssignments)  // multiple, dependent
-      // .then(getStudents)  // single, parallel
-      // .then(createAndPostIssues)
+    }).then(collateAssignmentsAndStudents)  // multiple, dependent
+      .then(createAndPostIssues)
       .catch(function(err) {
         console.log(err);
       })
   }
 
-  function collateAssignments(data) {
+  function collateAssignmentsAndStudents(data) {
     var assignments = convertToJSON(data.content)
-    return Promise.all(
-      Object.keys(assignments).map(function(key) {
-        return github.getContentAsync({
-          user: 'dev-academy-phase0',
-          repo: 'curriculum-private',
-          path: 'Assignments/' + assignments[key]
-        })
-      })
-    )
+    var promises = [...Object.keys(assignments).map(function(key) {
+      return fsp.readFileAsync('./Assignments/' + assignments[key], "utf-8")
+    }), github.getContentAsync({
+      user: 'dev-academy-phase0',
+      repo: cohort,
+      path: "students.json"
+    })]
+    return Promise.all(promises)
+  }
+
+  function createAndPostIssues(data) {
+    var students = convertToJSON(data.pop().content).studentGithubNames
+    console.log(students);
+    console.log(data);
   }
 
   // Needs github object

@@ -7,7 +7,7 @@ var consoleHelp = require('./console-help')
 
 var github = new GitHubApi({
   version: "3.0.0",
-  debug: true,
+  debug: false,
   protocol: "https",
 })
 
