@@ -28,7 +28,7 @@ if (action === "push") {
   collateAndPushAssignments(sprintAssignmentFile, githubCohortRepoName, githubReposAsync, github)
 } else if (action === "label") {
   authenticateGithub()
-  createIssueLabels()
+  createIssueLabels(githubCohortRepoName, github)
 } else {
   consoleHelp()
 }

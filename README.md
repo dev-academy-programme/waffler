@@ -3,7 +3,7 @@ Load a json of issues into a git repo
 
 ## setting up cohort curriculum
 
-1. globally install push-waffle `npm install -g push-waffle`
+1. globally install: `sudo npm install -g assignment-pusher`
 1. Create cohort repo e.g. `moa-2016` in the `dev-academy-phase0` org
 2. Add `students.json` to root of cohort repo, e.g.
   ```
