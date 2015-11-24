@@ -1,54 +1,82 @@
 var Promise = require("bluebird")
-// var fsp = Promise.promisifyAll(require("fs"))
 
-module.exports = function(sprintAssignmentFile, cohort, github) {
-  // var githubReposAsync = Promise.promisifyAll(github.repos)
-  // githubReposAsync.getContentAsync({
-  // })
-  //   .then(convertToJSON)
-  //   .then()
-  getSprintAssignmentData(sprintAssignmentFile, cohort, github)
-    .then(convertToJSON)
-}
-
-var getSprintAssignmentData = function(sprintAssignmentFile, cohort, github) {
-  return new Promise(function(resolve, reject) {
-    github.repos.getContent({
+module.exports = function (sprintAssignmentFile, cohort, github) {
+  collateAndPushAssignments()
+  
+  function collateAndPushAssignments() {
+    github.getContentAsync({
       user: 'dev-academy-phase0',
       repo: 'curriculum-private',
       path: sprintAssignmentFile
-    }, function(err, data) {
-      if (err) { reject(err) }
-      resolve(data)
+    }).then(function(data) {
+      return convertToJSON(data.content)
+    }) // single
+      .then(collateAssignments)  // multiple, dependent
+      // .then(getStudents)  // single, parallel
+      // .then(createAndPostIssues)
+      .catch(function() {
+        console.log('promisefail yo');
+      })
+  }
+
+  var getSprintAssignmentData = function() {
+    console.log(sprintAssignmentFile);
+    return new Promise(function(resolve, reject) {
+      github.repos.getContent()
     })
-  })
+
+    /*
+    return github.repos.getContent({})
+      .then(function (data) {
+        return convertToJSON(data.content)
+      })
+      .then
+    */
+  }
+
+  var collateAssignments = function(assignments) {
+    console.log('collating yo');
+    return Promise.all(
+      Object.keys(assignments).map(function(key) {
+        return getAssignmentContent(assignments[key])
+      })
+    )
+  }
+
+  // Needs github object
+  var getAssignmentContent = function(assignmentFilePath) {
+    console.log('getAssignmentContent', assignmentFilePath);
+    return new Promise(function(resolve, reject) {
+      github.repos.getContent({
+        user: 'dev-academy-phase0',
+        repo: 'curriculum-private',
+        path: 'assignments/' + assignmentFilePath
+      }, function(err, data) {
+        if (err) { reject(err) }
+        console.log(data);
+        resolve(convertToString(data.content))
+      })
+    })
+  }
+
+  function convertToJSON(data){
+    var b = new Buffer(data, 'base64')
+    return JSON.parse(b.toString())
+  }
+
+  function convertToString(data){
+    var b = new Buffer(data, 'base64')
+    return b.toString() 
+  }
+
+  return {
+    collateAndPushAssignments: collateAndPushAssignments
+  }
 }
 
-function convertToJSON(data){
-  var b = new Buffer(data.content, 'base64')
-  var assignments = JSON.parse(b.toString())
-  console.log(assignments);
-}
-
-// function getContent
-
-      // read&parse #-assignments.json
-        // read&parse assignment md files]
-          // build issues from assignments
-            // read&parse list of students from cohort repo students.json
-              //  post issues to github
 
 
-  // fs.readFileAsync(sprintAssignmentPath, function(err, data) {
-  //   if (err) { throw err }
-  //   assignmentPaths = JSON.parse(data)
-  //   console.log(assignmentPaths);
-  // })
-  // console.log(sprintAssignments);
-
-
-  var moaStudents = ['peterjacobson', 'pietgeursen', 'locksmithdon', 'jamanius', 'joshuavial']
-  var githubUserOrOrg = 'dev-academy-phase0'
+// var moaStudents = ['peterjacobson', 'pietgeursen', 'locksmithdon', 'jamanius', 'joshuavial']
 
   // var issues = compileIssuesObject(githubUserOrOrg, cohortRepo, assignments, moaStudents)
   // postSprintLabels(githubUserOrOrg, cohortRepo)
