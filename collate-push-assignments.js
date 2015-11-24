@@ -29,33 +29,34 @@ module.exports = function (sprintAssignmentFile, cohort, github) {
   }
 
   function createAndPostIssues(data) {
+    var sprintNum = sprintAssignmentFile.match(/\d/)
     var students = convertToJSON(data.pop().content).studentGithubNames
     var assignments = data.map(function(assignment) {
       return {
         title: assignment.match(/(?![#\s]).*$/m)[0],
-        description: assignment
+        description: assignment.replace(/\[x\]/g, '[ ]')
       }
     })
-    console.log(assignments);
-
+    var issues = compileIssuesObject(assignments, students, sprintNum)
+    console.log(issues);
   }
 
-  // function compileIssuesObject(githubUserOrOrg, destinationRepo, assignments, student_github_names){
-  //   var issues = []
-  //   for (var i = 0; i < student_github_names.length; i++) {
-  //     for (var k = 0; k < assignments.length; k++) {
-  //       issues.push({
-  //         user: githubUserOrOrg,
-  //         repo: destinationRepo,
-  //         title: assignments[k].title,
-  //         body: assignments[k].description,
-  //         assignee: student_github_names[i],
-  //         labels: ['sprint-1']
-  //       })
-  //     }  
-  //   }
-  //   return issues
-  // }
+  function compileIssuesObject(assignments, students, sprintNum){
+    var issues = []
+    for (var i = 0; i < students.length; i++) {
+      for (var k = 0; k < assignments.length; k++) {
+        issues.push({
+          user: 'dev-academy-phase0',
+          repo: cohort,
+          title: assignments[k].title,
+          body: assignments[k].description,
+          assignee: students[i],
+          labels: ['sprint-' + sprintNum]
+        })
+      }  
+    }
+    return issues
+  }
 
   function convertToJSON(data){
     var b = new Buffer(data, 'base64')
