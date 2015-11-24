@@ -1,5 +1,5 @@
 {
-  "name": "push-waffle",
+  "name": "assignment-pusher",
   "version": "1.0.0",
   "description": "push student assignments to github as issues",
   "main": "push-spike.js",
@@ -19,7 +19,6 @@
   "dependencies": {
     "bluebird": "^3.0.5",
     "fs-promise": "^0.3.1",
-    "github": "^0.2.4",
-    "prompt": "^0.2.14"
+    "github": "^0.2.4"
   }
 }
