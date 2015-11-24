@@ -1,11 +1,11 @@
 var Promise = require("bluebird")
 var fsp = Promise.promisifyAll(require("fs"))
 
-module.exports = function (sprintAssignmentFile, cohort, github) {
+module.exports = function (sprintAssignmentFile, cohort, githubReposAsync, github) {
   collateAndPushAssignments()
   
   function collateAndPushAssignments() {
-    github.getContentAsync({
+    githubReposAsync.getContentAsync({
       user: 'dev-academy-phase0',
       repo: 'curriculum-private',
       path: sprintAssignmentFile
@@ -20,7 +20,7 @@ module.exports = function (sprintAssignmentFile, cohort, github) {
     var assignments = convertToJSON(data.content)
     var promises = [...Object.keys(assignments).map(function(key) {
       return fsp.readFileAsync('./Assignments/' + assignments[key], "utf-8")
-    }), github.getContentAsync({
+    }), githubReposAsync.getContentAsync({
       user: 'dev-academy-phase0',
       repo: cohort,
       path: "students.json"
@@ -38,7 +38,7 @@ module.exports = function (sprintAssignmentFile, cohort, github) {
       }
     })
     var issues = compileIssuesObject(assignments, students, sprintNum)
-    console.log(issues);
+    postIssues(issues);
   }
 
   function compileIssuesObject(assignments, students, sprintNum){
@@ -58,6 +58,20 @@ module.exports = function (sprintAssignmentFile, cohort, github) {
     return issues
   }
 
+  function postIssues(issues) {
+    for (var i = 0; i < issues.length; i++) {
+      github.issues.create(issues[i], function(err, res) {
+        if (err) { console.log(err) }
+        console.log('assignment: ', res.title);
+        printFilteredStudentBoardLink(res.assignee.login);
+      })
+    };
+  }
+
+  function printFilteredStudentBoardLink(student) {
+    console.log("posted to: ", "https://waffle.io/dev-academy-phase0/" + cohort + "?search=" + student);
+  }
+
   function convertToJSON(data){
     var b = new Buffer(data, 'base64')
     return JSON.parse(b.toString())
@@ -71,30 +85,3 @@ module.exports = function (sprintAssignmentFile, cohort, github) {
 
 
 
-// var moaStudents = ['peterjacobson', 'pietgeursen', 'locksmithdon', 'jamanius', 'joshuavial']
-
-  // var issues = compileIssuesObject(githubUserOrOrg, cohortRepo, assignments, moaStudents)
-  // postSprintLabels(githubUserOrOrg, cohortRepo)
-  // postIssues(issues)
-
-
-
-  // var assignments = [
-  //   {
-  //     title: 'command line',
-  //     description: '- [ ] follow [command line basics tutorial](dskjf)\n- [ ] complete [basic command line challenges](sdkjh)'
-  //   },
-  //   {
-  //     title: 'shell scripting',
-  //     description: '- [ ] complete [aliasing challenge](sdlk)\n- [ ] complete [github task sucker app](sdkl)'
-  //   }
-  // ]
-
-
-
-  // function postIssues(issues) {
-  //   for (var i = 0; i < issues.length; i++) {
-  //     github.issues.create(issues[i], function(err, res) {
-  //     })
-  //   };
-  // }

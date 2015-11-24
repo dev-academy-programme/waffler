@@ -23,7 +23,7 @@ var githubPassword = process.argv[6] || process.env.GITHUB_PASSWORD
 
 if (action === "push") {
   authenticateGithub()
-  collateAndPushAssignments(sprintAssignmentFile, githubCohortRepoName, githubReposAsync)
+  collateAndPushAssignments(sprintAssignmentFile, githubCohortRepoName, githubReposAsync, github)
 } else if (action === "label") {
   authenticateGithub()
   createIssueLabels()
