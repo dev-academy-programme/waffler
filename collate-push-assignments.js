@@ -30,20 +30,31 @@ module.exports = function (sprintAssignmentFile, cohort, github) {
 
   function createAndPostIssues(data) {
     var students = convertToJSON(data.pop().content).studentGithubNames
-    console.log(students);
-    console.log(data);
+    var assignments = data.map(function(assignment) {
+      return {
+        title: assignment.match(/(?![#\s]).*$/m)[0],
+        description: assignment
+      }
+    })
+    console.log(assignments);
+
   }
 
-  // Needs github object
-  // function getAssignmentContent(assignmentFilePath) {
-  //   console.log('getAssignmentContent', assignmentFilePath);
-  //   return new Promise(function(resolve, reject) {
-  //     , function(err, data) {
-  //       if (err) { reject(err) }
-  //       console.log(data);
-  //       resolve(convertToString(data.content))
-  //     })
-  //   })
+  // function compileIssuesObject(githubUserOrOrg, destinationRepo, assignments, student_github_names){
+  //   var issues = []
+  //   for (var i = 0; i < student_github_names.length; i++) {
+  //     for (var k = 0; k < assignments.length; k++) {
+  //       issues.push({
+  //         user: githubUserOrOrg,
+  //         repo: destinationRepo,
+  //         title: assignments[k].title,
+  //         body: assignments[k].description,
+  //         assignee: student_github_names[i],
+  //         labels: ['sprint-1']
+  //       })
+  //     }  
+  //   }
+  //   return issues
   // }
 
   function convertToJSON(data){
@@ -79,22 +90,6 @@ module.exports = function (sprintAssignmentFile, cohort, github) {
   // ]
 
 
-  // function compileIssuesObject(githubUserOrOrg, destinationRepo, assignments, student_github_names){
-  //   var issues = []
-  //   for (var i = 0; i < student_github_names.length; i++) {
-  //     for (var k = 0; k < assignments.length; k++) {
-  //       issues.push({
-  //         user: githubUserOrOrg,
-  //         repo: destinationRepo,
-  //         title: assignments[k].title,
-  //         body: assignments[k].description,
-  //         assignee: student_github_names[i],
-  //         labels: ['sprint-1']
-  //       })
-  //     }  
-  //   }
-  //   return issues
-  // }
 
   // function postIssues(issues) {
   //   for (var i = 0; i < issues.length; i++) {
