@@ -55,10 +55,6 @@ module.exports = function (sprintAssignmentFile, cohort, github) {
     var b = new Buffer(data, 'base64')
     return b.toString() 
   }
-
-  return {
-    collateAndPushAssignments: collateAndPushAssignments
-  }
 }
 
 
