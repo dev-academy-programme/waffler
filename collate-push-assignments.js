@@ -19,7 +19,7 @@ module.exports = function (sprintAssignmentFile, cohort, githubReposAsync, githu
   function collateAssignmentsAndStudents(data) {
     var assignments = convertToJSON(data.content)
     var promises = [...Object.keys(assignments).map(function(key) {
-      return fsp.readFileAsync('./Assignments/' + assignments[key], "utf-8")
+      return fsp.readFileAsync('./assignments/' + assignments[key], "utf-8")
     }), githubReposAsync.getContentAsync({
       user: 'dev-academy-phase0',
       repo: cohort,
