@@ -20,7 +20,7 @@ var action = process.argv[2]
 
 function push() {
   if (action === "push") {
-    var sprintNum = process.argv[3]
+    var sprintNum = process.argv[3].match(/\d/)
     var githubCohortRepoName = process.argv[4]
     // shove this into authenticate github function as a prompt
     var githubUsername = process.argv[5] || process.env.GITHUB_USERNAME

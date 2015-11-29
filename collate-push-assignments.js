@@ -1,14 +1,14 @@
 var Promise = require("bluebird")
 var fsp = Promise.promisifyAll(require("fs"))
 
-module.exports = function (sprintAssignmentFile, cohort, githubReposAsync, github) {
+module.exports = function (sprintNum, cohort, githubReposAsync, github) {
   collateAndPushAssignments()
   
   function collateAndPushAssignments() {
     githubReposAsync.getContentAsync({
       user: 'dev-academy-programme',
       repo: 'curriculum-private',
-      path: sprintAssignmentFile
+      path: 'assignment-programme.json'
     }).then(collateAssignmentsAndStudents)  // multiple, dependent
       .then(createAndPostIssues)
       .catch(function(err) {
@@ -17,9 +17,10 @@ module.exports = function (sprintAssignmentFile, cohort, githubReposAsync, githu
   }
 
   function collateAssignmentsAndStudents(data) {
-    var assignments = convertToJSON(data.content)
-    var promises = [...Object.keys(assignments).map(function(key) {
-      return fsp.readFileAsync('./assignments/' + assignments[key], "utf-8")
+    var allAssignments = convertToJSON(data.content)
+    var assignments = allAssignments["sprint-" + sprintNum]
+    var promises = [...assignments.map(function(assignment) {
+      return fsp.readFileAsync('./assignments/' + assignment, "utf-8")
     }), githubReposAsync.getContentAsync({
       user: 'dev-academy-programme',
       repo: cohort,
@@ -29,7 +30,6 @@ module.exports = function (sprintAssignmentFile, cohort, githubReposAsync, githu
   }
 
   function createAndPostIssues(data) {
-    var sprintNum = sprintAssignmentFile.match(/\d/)
     var students = convertToJSON(data.pop().content).studentGithubNames
     var assignments = data.map(function(assignment) {
       return {
