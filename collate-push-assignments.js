@@ -20,7 +20,8 @@ module.exports = function (sprintNum, cohort, githubReposAsync, github) {
     var assignments = allAssignments.map(function(assignment) {
       return assignment.name
     }).filter(function(assignmentName) {
-      return parseInt(assignmentName[0]) == sprintNum
+      return parseInt(assignmentName[0]) == sprintNum ||
+        parseInt(assignmentName[0]) == 'p'
     })
     console.log(assignments);
     var promises = [...assignments.map(function(assignment) {
