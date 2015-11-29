@@ -8,18 +8,20 @@ Options:
 
 Examples:
   send assignments:
-        $ assignment-pusher push <assignments> <cohort> <github username*> <github password*>
-    e.g.$ assignment-pusher push 1-assignments moa-2016 peterjacobson* mypassword12*
+        $ waffle push <sprint#> <cohort>
+    e.g.$ waffle push 1 moa-2016
 
-      * not required if exporting GITHUB_USERNAME and GITHUB_PASSWORD from shell
 
-  create sprint labels for cohort repo (once per cohort):
-        $ assignment-pusher label nil <cohort> <github username*> <github password*>
-    e.g.$ assignment-pusher label nil moa-2016 peterjacobson mypassword12
+  create sprint labels for cohort repo (needed once per cohort):
+        $ waffle label <cohort>
+    e.g.$ waffle label moa-2016
+
+  export GITHUB_USERNAME and GITHUB_PASSWORD from shell 
+  to avoid github details prompt
 
 
 Detailled usage:
-  1. globally install push-waffle 'npm install -g push-waffle'
+  1. globally install assignment-pusher 'npm install -g assignment-pusher'
   1. Create cohort repo e.g. 'moa-2016' in the 'dev-academy-programme' org
   2. Add 'students.json' to root of cohort repo, e.g.
     '
@@ -34,7 +36,7 @@ Detailled usage:
     '
   3. Clone/navigate to [curriculum-private](https://github.com/dev-academy-programme/curriculum-private)
   4. 'git pull' to get latest changes
-  5. run push-waffle 'push-waffle 4-assignments.json'
+  5. run as per instructions above
   
   `);
 }

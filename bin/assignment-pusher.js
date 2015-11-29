@@ -1,3 +1,3 @@
 #!/usr/bin/env node
-var pusher = require('../index.js')
-pusher()
+var waffle = require('../index.js')
+waffle()

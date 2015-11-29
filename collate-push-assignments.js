@@ -36,6 +36,7 @@ module.exports = function (sprintNum, cohort, githubReposAsync, github) {
 
   function createAndPostIssues(data) {
     var students = convertToJSON(data.pop().content).studentGithubNames
+    var assignment
     var assignments = data.map(function(assignment) {
       return {
         title: assignment.match(/(?![#\s]).*$/m)[0],

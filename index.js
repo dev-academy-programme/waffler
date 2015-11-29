@@ -19,7 +19,7 @@ var githubReposAsync = Promise.promisifyAll(github.repos)
 // collect user input
 var action = process.argv[2]
 
-function push() {
+function waffle() {
   if (action === "push") {
     var sprintNum = process.argv[3].match(/\d/)
     var githubCohortRepoName = process.argv[4]
@@ -28,7 +28,7 @@ function push() {
   } else if (action === "label") {
     var githubCohortRepoName = process.argv[3]
     authenticateGithub()
-    createIssueLabels(githubCohortRepoName)
+    createIssueLabels(githubCohortRepoName, github)
   } else {
     consoleHelp()
   }
@@ -65,4 +65,5 @@ function authenticateSession(githubUsername, githubPassword) {
     password: githubPassword 
   })  
 }
-module.exports = push
+
+module.exports = waffle
