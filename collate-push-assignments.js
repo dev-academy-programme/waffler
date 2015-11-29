@@ -1,7 +1,7 @@
 var Promise = require("bluebird")
 var fsp = Promise.promisifyAll(require("fs"))
 
-module.exports = function (sprintNum, cohort, githubReposAsync, github) {
+module.exports = function (sprintNum, cohort, studentUsername, githubReposAsync, github) {
   collateAndPushAssignments()
   
   function collateAndPushAssignments() {
@@ -36,9 +36,8 @@ module.exports = function (sprintNum, cohort, githubReposAsync, github) {
   }
 
   function createAndPostIssues(data) {
-    var students = convertToJSON(data.pop().content).studentGithubNames
-    var assignment
-    var assignments = data.map(function(assignment) {
+    var students = [studentUsername] || convertToJSON(data.pop().content).studentGithubNames
+    var assignments = data.slice(0, -1).map(function(assignment) {
       return {
         title: assignment.match(/(?![#\s]).*$/m)[0],
         description: assignment.replace(/\[x\]/g, '[ ]')
