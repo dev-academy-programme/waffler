@@ -6,7 +6,7 @@ module.exports = function (sprintAssignmentFile, cohort, githubReposAsync, githu
   
   function collateAndPushAssignments() {
     githubReposAsync.getContentAsync({
-      user: 'dev-academy-phase0',
+      user: 'dev-academy-programme',
       repo: 'curriculum-private',
       path: sprintAssignmentFile
     }).then(collateAssignmentsAndStudents)  // multiple, dependent
@@ -21,7 +21,7 @@ module.exports = function (sprintAssignmentFile, cohort, githubReposAsync, githu
     var promises = [...Object.keys(assignments).map(function(key) {
       return fsp.readFileAsync('./assignments/' + assignments[key], "utf-8")
     }), githubReposAsync.getContentAsync({
-      user: 'dev-academy-phase0',
+      user: 'dev-academy-programme',
       repo: cohort,
       path: "students.json"
     })]
@@ -46,7 +46,7 @@ module.exports = function (sprintAssignmentFile, cohort, githubReposAsync, githu
     for (var i = 0; i < students.length; i++) {
       for (var k = 0; k < assignments.length; k++) {
         issues.push({
-          user: 'dev-academy-phase0',
+          user: 'dev-academy-programme',
           repo: cohort,
           title: assignments[k].title,
           body: assignments[k].description,
@@ -69,7 +69,7 @@ module.exports = function (sprintAssignmentFile, cohort, githubReposAsync, githu
   }
 
   function printFilteredStudentBoardLink(student) {
-    console.log("posted to: ", "https://waffle.io/dev-academy-phase0/" + cohort + "?search=" + student);
+    console.log("posted to: ", "https://waffle.io/dev-academy-programme/" + cohort + "?search=" + student);
   }
 
   function convertToJSON(data){
