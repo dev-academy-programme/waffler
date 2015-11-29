@@ -18,6 +18,7 @@ module.exports = function (sprintNum, cohort, studentUsername, githubReposAsync,
 
   function collateAssignmentsAndStudents(allAssignments) {
     console.log('pushing sprint-' + sprintNum);
+    console.log('cohort: ' + cohort);
     var assignments = allAssignments.map(function(assignment) {
       return assignment.name
     }).filter(function(assignmentName) {
@@ -37,6 +38,7 @@ module.exports = function (sprintNum, cohort, studentUsername, githubReposAsync,
 
   function createAndPostIssues(data) {
     var students = [studentUsername] || convertToJSON(data.pop().content).studentGithubNames
+    console.log('students: ', students);
     var assignments = data.slice(0, -1).map(function(assignment) {
       return {
         title: assignment.match(/(?![#\s]).*$/m)[0],
@@ -68,8 +70,7 @@ module.exports = function (sprintNum, cohort, studentUsername, githubReposAsync,
     for (var i = 0; i < issues.length; i++) {
       github.issues.create(issues[i], function(err, res) {
         if (err) { console.log(err) }
-        console.log('assignment: ', res.title);
-        printFilteredStudentBoardLink(res.assignee.login);
+        console.log('assignment: ', res.title, ' >> ', res.assignee.login );
       })
     };
   }
