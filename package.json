@@ -3,6 +3,7 @@
   "version": "0.0.5",
   "description": "push student assignments to github as issues",
   "main": "push-spike.js",
+  "bin" : {"assignment-pusher": "bin/assignment-pusher.js"},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
