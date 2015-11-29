@@ -1,5 +1,6 @@
 var Promise = require("bluebird")
 var GitHubApi = require('github')
+var prompt = require("prompt")
 
 var collateAndPushAssignments = require('./collate-push-assignments')
 var createIssueLabels = require('./create-issue-labels')
@@ -22,10 +23,6 @@ function push() {
   if (action === "push") {
     var sprintNum = process.argv[3].match(/\d/)
     var githubCohortRepoName = process.argv[4]
-    // shove this into authenticate github function as a prompt
-    var githubUsername = process.argv[5] || process.env.GITHUB_USERNAME
-    var githubPassword = process.argv[6] || process.env.GITHUB_PASSWORD
-    // 
     authenticateGithub()
     collateAndPushAssignments(sprintNum, githubCohortRepoName, githubReposAsync, github)
   } else if (action === "label") {
@@ -38,10 +35,33 @@ function push() {
 }
 
 function authenticateGithub() {
+  if (!!process.env.GITHUB_USERNAME && !!process.env.GITHUB_PASSWORD) {
+    authenticateSession(process.env.GITHUB_USERNAME,process.env.GITHUB_PASSWORD)
+  } else {
+    prompt.start()
+    var schema = {
+    properties: {
+      githubUsername: {
+        required: true
+      },
+      githubPassword: {
+        required: true
+        hidden: true
+      }
+    }
+  };
+    prompt.get(schema, function(err, result) {
+      if (err) { throw err }
+      authenticateSession(result.githubUsername, result.githubPassword)
+    })
+  }
+}
+
+function authenticateSession(githubUsername, githubPassword) {
   github.authenticate({
     type: "basic", 
     username: githubUsername,
     password: githubPassword 
-  })
+  })  
 }
 module.exports = push
