@@ -17,10 +17,11 @@ module.exports = function (sprintNum, cohort, githubReposAsync, github) {
   }
 
   function collateAssignmentsAndStudents(allAssignments) {
+    console.log('pushing sprint-' + sprintNum);
     var assignments = allAssignments.map(function(assignment) {
       return assignment.name
     }).filter(function(assignmentName) {
-      return parseInt(assignmentName[0]) == sprintNum ||
+      return assignmentName[0] == sprintNum ||
         parseInt(assignmentName[0]) == 'p'
     })
     console.log(assignments);

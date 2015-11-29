@@ -1,6 +1,6 @@
 {
   "name": "assignment-pusher",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "push student assignments to github as issues",
   "main": "push-spike.js",
   "bin": {
