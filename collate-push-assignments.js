@@ -66,13 +66,31 @@ module.exports = function (sprintNum, cohort, studentUsername, githubReposAsync,
     return issues
   }
 
-  function postIssues(issues) {
+  function postIssues(unsortedIssues) {
+    var issues = sortIssues(unsortedIssues)
+    console.log(issues);
     for (var i = 0; i < issues.length; i++) {
+      
       github.issues.create(issues[i], function(err, res) {
         if (err) { console.log(err) }
         console.log('assignment: ', res.title, ' >> ', res.assignee.login );
+
       })
+
     };
+  }
+
+  function sortIssues(unsortedIssues) {
+    return unsortedIssues.sort(function(a, b) {
+      var aNum = getOrderablePartFromTitle(a.title)
+      var bNum = getOrderablePartFromTitle(b.title)
+      return aNum - bNum
+    }).reverse()
+  }
+
+  function getOrderablePartFromTitle(title) {
+    var titleSplit = title.match(/(\d+)(\.)(\d+)/)
+    return parseInt(titleSplit[1])*1000 + parseInt(titleSplit[3])
   }
 
   function printFilteredStudentBoardLink(student) {

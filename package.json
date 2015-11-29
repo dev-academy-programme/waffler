@@ -1,10 +1,10 @@
 {
-  "name": "assignment-pusher",
-  "version": "1.0.18",
+  "name": "waffler",
+  "version": "1.0.20",
   "description": "push student assignments to github as issues",
-  "main": "push-spike.js",
+  "main": "bin/waffler.js",
   "bin": {
-    "waffle": "bin/assignment-pusher.js"
+    "waffle": "bin/waffler.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,6 +23,7 @@
     "bluebird": "^3.0.5",
     "fs-promise": "^0.3.1",
     "github": "^0.2.4",
-    "prompt": "^0.2.14"
+    "prompt": "^0.2.14",
+    "tape": "^4.2.2"
   }
 }
