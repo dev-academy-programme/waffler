@@ -17,18 +17,21 @@ var githubReposAsync = Promise.promisifyAll(github.repos)
 
 // collect user input
 var action = process.argv[2]
-var sprintAssignmentFile = process.argv[3]
-var githubCohortRepoName = process.argv[4]
-var githubUsername = process.argv[5] || process.env.GITHUB_USERNAME
-var githubPassword = process.argv[6] || process.env.GITHUB_PASSWORD
 
 function push() {
   if (action === "push") {
+    var sprintNum = process.argv[3]
+    var githubCohortRepoName = process.argv[4]
+    // shove this into authenticate github function as a prompt
+    var githubUsername = process.argv[5] || process.env.GITHUB_USERNAME
+    var githubPassword = process.argv[6] || process.env.GITHUB_PASSWORD
+    // 
     authenticateGithub()
-    collateAndPushAssignments(sprintAssignmentFile, githubCohortRepoName, githubReposAsync, github)
+    collateAndPushAssignments(sprintNum, githubCohortRepoName, githubReposAsync, github)
   } else if (action === "label") {
+    var githubCohortRepoName = process.argv[3]
     authenticateGithub()
-    createIssueLabels()
+    createIssueLabels(githubCohortRepoName)
   } else {
     consoleHelp()
   }
