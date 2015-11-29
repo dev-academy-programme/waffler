@@ -34,6 +34,7 @@ function push() {
   }
 }
 
+
 function authenticateGithub() {
   if (!!process.env.GITHUB_USERNAME && !!process.env.GITHUB_PASSWORD) {
     authenticateSession(process.env.GITHUB_USERNAME,process.env.GITHUB_PASSWORD)
@@ -45,7 +46,7 @@ function authenticateGithub() {
         required: true
       },
       githubPassword: {
-        required: true
+        required: true,
         hidden: true
       }
     }

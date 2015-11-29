@@ -8,7 +8,7 @@ module.exports = function (sprintNum, cohort, githubReposAsync, github) {
     githubReposAsync.getContentAsync({
       user: 'dev-academy-programme',
       repo: 'curriculum-private',
-      path: 'assignment-programme.json'
+      path: 'assignments'
     }).then(collateAssignmentsAndStudents)  // multiple, dependent
       .then(createAndPostIssues)
       .catch(function(err) {
@@ -16,9 +16,13 @@ module.exports = function (sprintNum, cohort, githubReposAsync, github) {
       })
   }
 
-  function collateAssignmentsAndStudents(data) {
-    var allAssignments = convertToJSON(data.content)
-    var assignments = allAssignments["sprint-" + sprintNum]
+  function collateAssignmentsAndStudents(allAssignments) {
+    var assignments = allAssignments.map(function(assignment) {
+      return assignment.name
+    }).filter(function(assignmentName) {
+      return parseInt(assignmentName[0]) == sprintNum
+    })
+    console.log(assignments);
     var promises = [...assignments.map(function(assignment) {
       return fsp.readFileAsync('./assignments/' + assignment, "utf-8")
     }), githubReposAsync.getContentAsync({
