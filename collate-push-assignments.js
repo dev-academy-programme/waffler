@@ -68,16 +68,17 @@ module.exports = function (sprintNum, cohort, studentUsername, githubReposAsync,
 
   function postIssues(unsortedIssues) {
     var issues = sortIssues(unsortedIssues)
-    console.log(issues);
-    for (var i = 0; i < issues.length; i++) {
-      
-      github.issues.create(issues[i], function(err, res) {
-        if (err) { console.log(err) }
-        console.log('assignment: ', res.title, ' >> ', res.assignee.login );
+    postIssue(issues, 0)
+  }
 
-      })
-
-    };
+  function postIssue(issues, i) {
+    if (i => issues.length) { return }
+    github.issues.create(issues[i], function(err, res) {
+      if (err) { console.log(err) }
+      console.log('assignment: ', res.title, ' >> ', res.assignee.login )
+      i++
+      postIssue(issues, i)
+    })
   }
 
   function sortIssues(unsortedIssues) {
