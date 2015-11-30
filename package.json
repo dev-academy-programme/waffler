@@ -7,7 +7,11 @@
     "waffle": "bin/waffler.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "standard && tape test/**/*.js",
+    "tape": "tape test/**/*.js"
+  },
+  "directories": {
+    "test": "test"
   },
   "repository": {
     "type": "git",
@@ -24,6 +28,12 @@
     "fs-promise": "^0.3.1",
     "github": "^0.2.4",
     "prompt": "^0.2.14",
+  },
+  "devDependencies": {
     "tape": "^4.2.2"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/peterjacobson/waffler/issues"
+  },
+  "homepage": "https://github.com/peterjacobson/waffler"
 }
