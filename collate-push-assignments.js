@@ -1,14 +1,14 @@
 var Promise = require("bluebird")
 var fsp = Promise.promisifyAll(require("fs"))
 
-module.exports = function (sprintNum, cohort, studentUsername, githubReposAsync, github) {
+module.exports = function (sprintNum, cohort, studentUsername, assignmentsFolder, githubReposAsync, github) {
   collateAndPushAssignments()
   
   function collateAndPushAssignments() {
     githubReposAsync.getContentAsync({
       user: 'dev-academy-programme',
       repo: 'curriculum-private',
-      path: 'assignments'
+      path: assignmentsFolder || 'assignments'
     }).then(collateAssignmentsAndStudents)  // multiple, dependent
       .then(createAndPostIssues)
       .catch(function(err) {
@@ -27,7 +27,8 @@ module.exports = function (sprintNum, cohort, studentUsername, githubReposAsync,
     })
     console.log(assignments);
     var promises = [...assignments.map(function(assignment) {
-      return fsp.readFileAsync('./assignments/' + assignment, "utf-8")
+    var folder = assignmentsFolder || 'assignments'
+      return fsp.readFileAsync('./'+ folder + '/' + assignment, "utf-8")
     }), githubReposAsync.getContentAsync({
       user: 'dev-academy-programme',
       repo: cohort,

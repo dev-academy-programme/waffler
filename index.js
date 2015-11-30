@@ -24,8 +24,9 @@ function waffle() {
     var sprintNum = process.argv[3].match(/\d/)
     var githubCohortRepoName = process.argv[4]
     var studentGithubUsername = process.argv[5]
+    var assignmentsFolder = process.argv[6]
     authenticateGithub()
-    collateAndPushAssignments(sprintNum, githubCohortRepoName, studentGithubUsername, githubReposAsync, github)
+    collateAndPushAssignments(sprintNum, githubCohortRepoName, studentGithubUsername, assignmentsFolder, githubReposAsync, github)
   } else if (action === "label") {
     var githubCohortRepoName = process.argv[3]
     authenticateGithub()
