@@ -72,7 +72,7 @@ module.exports = function (sprintNum, cohort, studentUsername, githubReposAsync,
   }
 
   function postIssue(issues, i) {
-    if (i => issues.length) { return }
+    if (i >= issues.length) { return }
     github.issues.create(issues[i], function(err, res) {
       if (err) { console.log(err) }
       console.log('assignment: ', res.title, ' >> ', res.assignee.login )
