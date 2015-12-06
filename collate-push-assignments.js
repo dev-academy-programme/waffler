@@ -23,12 +23,12 @@ module.exports = function (sprintNum, cohort, studentUsername, assignmentsFolder
       return assignment.name
     }).filter(function(assignmentName) {
       return assignmentName[0] == sprintNum ||
-        parseInt(assignmentName[0]) == 'p'
+        assignmentName[0] == 'p'
     })
     console.log(assignments);
     var promises = [...assignments.map(function(assignment) {
     var folder = assignmentsFolder || 'assignments'
-      return fsp.readFileAsync('./'+ folder + '/' + assignment, "utf-8")
+      return fsp.readFileAsync('./'+ folder + '/' + assignment + '/README.md', "utf-8")
     }), githubReposAsync.getContentAsync({
       user: 'dev-academy-programme',
       repo: cohort,
@@ -38,7 +38,8 @@ module.exports = function (sprintNum, cohort, studentUsername, assignmentsFolder
   }
 
   function createAndPostIssues(data) {
-    var students = [studentUsername] || convertToJSON(data.pop().content).studentGithubNames
+    var students =  [studentUsername] || 
+                    convertToJSON(data.pop().content).studentGithubNames
     console.log('students: ', students);
     var assignments = data.slice(0, -1).map(function(assignment) {
       return {
