@@ -25,9 +25,9 @@ module.exports = function (sprintNum, cohort, studentUsername, assignmentsFolder
       return assignmentName[0] == sprintNum ||
         assignmentName[0] == 'p'
     })
-    console.log(assignments);
+    console.log('assignments: ', assignments);
     var promises = [...assignments.map(function(assignment) {
-    var folder = assignmentsFolder || 'assignments'
+      var folder = assignmentsFolder || 'assignments'
       return fsp.readFileAsync('./'+ folder + '/' + assignment + '/README.md', "utf-8")
     }), githubReposAsync.getContentAsync({
       user: 'dev-academy-programme',
@@ -38,13 +38,14 @@ module.exports = function (sprintNum, cohort, studentUsername, assignmentsFolder
   }
 
   function createAndPostIssues(data) {
-    var students =  [studentUsername] || 
-                    convertToJSON(data.pop().content).studentGithubNames
-    console.log('students: ', students);
-    var assignments = data.slice(0, -1).map(function(assignment) {
+    var studentList = convertToJSON(data.pop().content).studentGithubNames
+    console.log('cohort students: ', studentList);
+    var students =  studentUsername == '-' ? studentList : [studentUsername]              
+    console.log('students pushing to: ', students);
+    var assignments = data.map(function(assignment) {
       return {
         title: assignment.match(/(?![#\s]).*$/m)[0],
-        description: assignment.replace(/\[x\]/g, '[ ]')
+        description: assignment.replace(/\[x\]/g, '[ ]') 
       }
     })
     var issues = compileIssuesObject(assignments, students, sprintNum)
@@ -69,7 +70,9 @@ module.exports = function (sprintNum, cohort, studentUsername, assignmentsFolder
   }
 
   function postIssues(unsortedIssues) {
+    console.log('sorting issues...');
     var issues = sortIssues(unsortedIssues)
+    console.log('posting issues...');
     postIssue(issues, 0)
   }
 
@@ -93,7 +96,7 @@ module.exports = function (sprintNum, cohort, studentUsername, assignmentsFolder
 
   function getOrderablePartFromTitle(title) {
     var titleSplit = title.match(/(\d+)(\.)(\d+)/)
-    return parseInt(titleSplit[1])*1000 + parseInt(titleSplit[3])
+    return titleSplit ? (parseInt(titleSplit[1])*1000 + parseInt(titleSplit[3])) : 100
   }
 
   function printFilteredStudentBoardLink(student) {
