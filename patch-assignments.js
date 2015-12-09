@@ -4,31 +4,54 @@ module.exports = function(githubCohortRepoName, assignmentTitleSearch, findTerm,
   var githubIssuesAsync = Promise.promisifyAll(github.issues)
   console.log('looking for titles containing: ', assignmentTitleSearch);
   // !!! currently only pulls first 100 issues !!! will be many more!!!
-  githubIssuesAsync.repoIssuesAsync({
-    user: 'dev-academy-programme',
-    repo: githubCohortRepoName,
-    per_page: 100
-  }).filter(function(issue) {
-    console.log(issue.title);
+  patchPagesIssues(20)
+
+  function patchPagesIssues(numPages) {
+    for (var i = 0; i < numPages; i++) {
+      searchAndPatchPageOfIssues(i)
+    };
+  }
+
+  function searchAndPatchPageOfIssues(pageNum) {
+    var githubIssueFetchOptions = {
+      user: 'dev-academy-programme',
+      repo: githubCohortRepoName,
+      pageNum: pageNum,
+      per_page: 100
+    }
+    githubIssuesAsync.repoIssuesAsync(githubIssueFetchOptions)
+      .filter(matchAssignmentTitle)
+      .then(patchIssues)
+      .catch(handleError)
+  }
+
+  function matchAssignmentTitle(issue) {
+    console.log(issue.title)
     return issue.title.match(assignmentTitleSearch)
-  }).then(function(issues) {
+  }
+
+  function patchAnIssue(issue) {
+    console.log('...processing issue', issues[i].number);
+    updatedBody = issues[i].body.replace(findTerm,replaceTerm)
+    githubIssuesAsync.editAsync({
+      user: 'dev-academy-programme',
+      repo: githubCohortRepoName,
+      number: issues[i].number,
+      body: updatedBody
+    }).then(function(responseIssue) {
+      console.log('patched ',responseIssue.number);
+    }).catch(handleError)
+  }
+
+  function patchIssues(issues) {
     console.log('num issues found: ', issues.length)
     for (var i = 0; i < issues.length; i++) {
-      console.log('...processing issue', issues[i].number);
-      updatedBody = issues[i].body.replace(findTerm,replaceTerm)
-      githubIssuesAsync.editAsync({
-        user: 'dev-academy-programme',
-        repo: githubCohortRepoName,
-        number: issues[i].number,
-        body: updatedBody
-      }).then(function(responseIssue) {
-        console.log('patched ',responseIssue.number);
-      }).catch(function(err) {
-        console.log(err);
-      })
-    };
-  }).catch(function(err) {
+      patchAnIssue(issues[i])
+    }
+  }
+
+  function handleError(err) {
     console.log(err);
-  })
+  }
 }
 
