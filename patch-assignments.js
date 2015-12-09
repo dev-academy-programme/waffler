@@ -7,10 +7,16 @@ module.exports = function(githubCohortRepoName, assignmentTitleSearch, findTerm,
     repo: githubCohortRepoName 
   }).filter(function(issue) {
     return issue.title.match(assignmentTitleSearch)
-  }).map(function(issue) {
-    return issue.number
-  }).then( function(data) {
-    console.log(data);
+  }).then( function(issues) {
+    for (var i = 0; i < issues.length; i++) {
+      updatedBody = issues[i].body.replace(findTerm,replaceTerm)
+      github.issues.edit({
+        user: 'dev-academy-programme',
+        repo: githubCohortRepoName,
+        number: issues[i].number,
+        body: updatedBody
+      })
+    };
   })
 }
 
