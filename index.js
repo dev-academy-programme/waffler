@@ -4,6 +4,7 @@ var prompt = require("prompt")
 
 var collateAndPushAssignments = require('./collate-push-assignments')
 var createIssueLabels = require('./create-issue-labels')
+var patchAssignments = require('./patch-assignments')
 var consoleHelp = require('./console-help')
 
 
@@ -31,6 +32,14 @@ function waffle() {
     var githubCohortRepoName = process.argv[3]
     authenticateGithub()
     createIssueLabels(githubCohortRepoName, github)
+  } else if (action === "patch") {
+    // waffle patch moa-2010 1.4 "skjdskljdsaf" "afkljadfslkj"
+    var githubCohortRepoName = process.argv[3]
+    var assignmentTitleSearch = process.argv[4]
+    var findTerm = process.argv[5]
+    var replaceTerm = process.argv[6]
+    authenticateGithub()
+    patchAssignments(githubCohortRepoName, assignmentTitleSearch, findTerm, replaceTerm, github)
   } else {
     consoleHelp()
   }
