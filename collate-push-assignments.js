@@ -45,7 +45,7 @@ module.exports = function (sprintNum, cohort, studentUsername, assignmentsFolder
     var assignments = data.map(function(assignment) {
       return {
         title: assignment.match(/(?![#\s]).*$/m)[0],
-        description: assignment.replace(/\[x\]/g, '[ ]') 
+        description: assignment.replace(/\[x\]/g, '[ ]')
       }
     })
     var issues = compileIssuesObject(assignments, students, sprintNum)
