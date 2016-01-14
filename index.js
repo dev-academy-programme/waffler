@@ -1,13 +1,10 @@
-var Promise = require("bluebird")
 var GitHubApi = require('github')
-var prompt = require("prompt")
+var prompt = require('prompt')
 
-var collateAndPushAssignments = require('./collate-push-assignments')
+var pushAssignments = require('./push-assignments')
 var createIssueLabels = require('./create-issue-labels')
 var patchAssignments = require('./patch-assignments')
-var consoleHelp = require('./console-help')
-
-
+var printConsoleHelp = require('./console-help')
 
 var github = new GitHubApi({
   version: "3.0.0",
@@ -15,33 +12,44 @@ var github = new GitHubApi({
   protocol: "https",
 })
 
-var githubReposAsync = Promise.promisifyAll(github.repos)
-
-// collect user input
-var action = process.argv[2]
-
 function waffle() {
+  var action = process.argv[2]
+
   if (action === "push") {
-    var sprintNum = process.argv[3].match(/\d/)
-    var githubCohortRepoName = process.argv[4]
-    var studentGithubUsername = process.argv[5]
-    var assignmentsFolder = process.argv[6]
+    // waffle push 3 moa-2010 -[OR]githubusername specialAssignmentsProgrammeFileName
     authenticateGithub()
-    collateAndPushAssignments(sprintNum, githubCohortRepoName, studentGithubUsername, assignmentsFolder, githubReposAsync, github)
+    var options = {
+      sprintNum: process.argv[3].match(/\d/),
+      githubCohortRepoName: process.argv[4],
+      studentGithubUsername: process.argv[5],
+      assignmentsFolder: process.argv[6],
+      githubApi: github
+    }
+    pushAssignments(options)
+
   } else if (action === "label") {
-    var githubCohortRepoName = process.argv[3]
+    // waffle label moa-2010
     authenticateGithub()
-    createIssueLabels(githubCohortRepoName, github)
+    var options = {
+      githubCohortRepoName: process.argv[3],
+      githubApi: github
+    }
+    createIssueLabels(options)
+
   } else if (action === "patch") {
     // waffle patch moa-2010 1.4 "skjdskljdsaf" "afkljadfslkj"
-    var githubCohortRepoName = process.argv[3]
-    var assignmentTitleSearch = process.argv[4]
-    var findTerm = process.argv[5]
-    var replaceTerm = process.argv[6]
     authenticateGithub()
-    patchAssignments(githubCohortRepoName, assignmentTitleSearch, findTerm, replaceTerm, github)
+    var options = {
+      githubCohortRepoName: process.argv[3],
+      assignmentTitleSearch: process.argv[4],
+      findTerm: process.argv[5],
+      replaceTerm: process.argv[6],
+      githubApi: github
+    }
+    patchAssignments(options)
+
   } else {
-    consoleHelp()
+    printConsoleHelp()
   }
 }
 
@@ -61,7 +69,6 @@ function authenticateGithub() {
         hidden: true
       }
     }
-  };
     prompt.get(schema, function(err, result) {
       if (err) { throw err }
       authenticateSession(result.githubUsername, result.githubPassword)
@@ -79,30 +86,3 @@ function authenticateSession(githubUsername, githubPassword) {
 
 module.exports = waffle
 
-/*
-
-var bulk = require('bulk-require')
-var auto = require('run-auto')
-var mapValues = require('lodash').mapValues
-
-var taskName = process.argv[2]
-var context = {}
-
-var tasks = map(
-  bulk(__dirname, 'tasks/*.js'),
-  function (module) {
-    console.log("module", module)
-    // return module(context)
-  }
-)
-
-var entryTasks = mapValues(
-  entries, function (entr
-)
-
-auto(tasks, function (err) {
-  if (err) { throw err }
-  console.log("done!")
-})
-
-*/
