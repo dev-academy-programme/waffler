@@ -19,6 +19,7 @@ module.exports = function (sprintNum, cohort, studentUsername, assignmentsFolder
   function collateAssignmentsAndStudents(allAssignments) {
     console.log('pushing sprint-' + sprintNum);
     console.log('cohort: ' + cohort);
+    
     var assignments = allAssignments.map(function(assignment) {
       return assignment.name
     }).filter(function(assignmentName) {
@@ -26,6 +27,7 @@ module.exports = function (sprintNum, cohort, studentUsername, assignmentsFolder
         assignmentName[0] == 'p'
     })
     console.log('assignments: ', assignments);
+
     var promises = [...assignments.map(function(assignment) {
       var folder = assignmentsFolder || 'assignments'
       return fsp.readFileAsync('./'+ folder + '/' + assignment + '/README.md', "utf-8")
@@ -111,6 +113,16 @@ module.exports = function (sprintNum, cohort, studentUsername, assignmentsFolder
   function convertToString(data){
     var b = new Buffer(data, 'base64')
     return b.toString() 
+  }
+
+  function getAllIssues() {
+    var numPagesOf100Issues = 20
+    // get all issues
+    for (var i = 0; i < numPagesOf100Issues; i++) {
+      // make requests
+      // get issues
+    };
+    // compile object of all user:assignment-title pairs
   }
 }
 
