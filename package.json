@@ -1,6 +1,6 @@
 {
   "name": "waffler",
-  "version": "1.0.36",
+  "version": "1.0.37",
   "description": "push student assignments to github as issues",
   "main": "bin/waffler.js",
   "bin": {

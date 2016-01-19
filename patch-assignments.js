@@ -15,10 +15,9 @@ module.exports = function(githubCohortRepoName, assignmentTitleSearch, findTerm,
       console.log(issue.title);
       return issue.title.match(assignmentTitleSearch)
     }).then(function(issues) {
-      console.log('num issues found: ', issues.length)
       for (var i = 0; i < issues.length; i++) {
-        console.log('...processing issue', issues[i].number);
-        updatedBody = issues[i].body.replace(findTerm,replaceTerm)
+        findExpression = new RegExp(findTerm, "g")
+        updatedBody = issues[i].body.replace(findExpression,replaceTerm)
         githubIssuesAsync.editAsync({
           user: 'dev-academy-programme',
           repo: githubCohortRepoName,
