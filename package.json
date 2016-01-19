@@ -8,7 +8,10 @@
   },
   "scripts": {
     "test": "standard && tape",
-    "tape": "babel test/**/*.js | node | faucet"
+    "tape": "babel test/**/*.js | node | faucet; exit 0",
+    "patch-release": "npm version patch && npm publish && git push --follow-tags",
+    "compile": "babel -d lib/ src/",
+    "prepublish": "npm run compile"
   },
   "directories": {
     "test": "test"
