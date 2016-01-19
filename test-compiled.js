@@ -1,5 +1,5 @@
-import test from 'tape'
-import sinon from 'sinon'
+import test from 'tape';
+import sinon from 'sinon';
 
 // import getAssignmentProgrammeModule from '../tasks/'
 
@@ -12,21 +12,20 @@ test('sends correct data to github', assert => {
   // arrange
   // act
   // assert
-  assert.pass()
-  assert.end()
-})
+  assert.pass();
+  assert.end();
+});
 
 test('dfg', assert => {
   // arrange
   // act
-  // assert  
-  assert.ok(true)
-  assert.end()
-})
-
+  // assert 
+  assert.ok(true);
+  assert.end();
+});
 
 test('dffdhdfh', assert => {
   // arrange
   // act
-  // assert  
-})
+  // assert 
+});

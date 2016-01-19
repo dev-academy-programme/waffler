@@ -7,8 +7,8 @@
     "waffle": "bin/waffler.js"
   },
   "scripts": {
-    "test": "standard && ava",
-    "tape": "tape test/**/*.js"
+    "test": "standard && tape",
+    "tape": "babel test/**/*.js | node | faucet"
   },
   "directories": {
     "test": "test"
@@ -31,10 +31,11 @@
     "run-auto": "^1.1.3"
   },
   "devDependencies": {
-    "ava": "^0.9.1",
+    "babel": "^6.3.26",
+    "babel-preset-es2015": "^6.3.13",
+    "faucet": "0.0.1",
     "sinon": "^1.17.2",
-    "babel": "^5.8.33",
-    "babel-core": "^5.8.33",
-    "babel-eslint": "^4.1.5"
+    "standard": "^5.4.1",
+    "tape": "^4.4.0"
   }
 }
