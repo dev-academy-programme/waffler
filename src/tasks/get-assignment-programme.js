@@ -6,6 +6,7 @@ function getAssignmentsProgramme (context) {
   // context.folder...
   // ...
   return function (input, callback) {
-    console.log(context);
+    console.log(context)
+    context.githubApi.get
   }
 }

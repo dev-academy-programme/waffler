@@ -26,5 +26,13 @@ function pushAssignments(options) {
   })
 }
 
+// authenticate github
+// get all issues
+// read assignment-programme
+// select sprint's assignments
+// read assignment contents
+// compile assignments into issue
+// create issues for each student
+// push a 
 
 
