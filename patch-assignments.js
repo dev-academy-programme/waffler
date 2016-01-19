@@ -12,7 +12,6 @@ module.exports = function(githubCohortRepoName, assignmentTitleSearch, findTerm,
       page: i,
       per_page: 100
     }).filter(function(issue) {
-      console.log(issue.title);
       return issue.title.match(assignmentTitleSearch)
     }).then(function(issues) {
       for (var i = 0; i < issues.length; i++) {
