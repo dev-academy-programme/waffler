@@ -7,8 +7,8 @@
     "waffle": "bin/waffler.js"
   },
   "scripts": {
-    "test": "npm run tape",
-    "tape": "tape test/**/*.js"
+    "test": "npm run -s tape",
+    "tape": "tape test/**/*.js | tap-spec"
   },
   "directories": {
     "test": "test"
@@ -20,9 +20,9 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/peterjacobson/push-waffle/issues"
+    "url": "https://github.com/peterjacobson/waffler/issues"
   },
-  "homepage": "https://github.com/peterjacobson/push-waffle#readme",
+  "homepage": "https://github.com/peterjacobson/waffler",
   "dependencies": {
     "bluebird": "^3.0.5",
     "fs-promise": "^0.3.1",
@@ -30,10 +30,7 @@
     "prompt": "^0.2.14"
   },
   "devDependencies": {
+    "tap-spec": "^4.1.1",
     "tape": "^4.2.2"
-  },
-  "bugs": {
-    "url": "https://github.com/peterjacobson/waffler/issues"
-  },
-  "homepage": "https://github.com/peterjacobson/waffler"
+  }
 }
