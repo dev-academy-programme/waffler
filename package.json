@@ -7,7 +7,7 @@
     "waffle": "bin/waffler.js"
   },
   "scripts": {
-    "test": "standard && tape test/**/*.js",
+    "test": "npm run tape",
     "tape": "tape test/**/*.js"
   },
   "directories": {
