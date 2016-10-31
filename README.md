@@ -1,6 +1,8 @@
 # Waffler
 Load a json of issues into a git repo
 
+> **NOTE**: This tool is no longer being used to push Phase 0 assignments. It has been superseded by [waffler-the-revenge](https://www.npmjs.com/package/waffler-the-revenge). 
+
 ## setting up cohort curriculum
 
 1. export GITHUB_USERNAME and GITHUB_PASSWORD from shell 
